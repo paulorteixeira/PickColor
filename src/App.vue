@@ -1,6 +1,6 @@
 <template>
   <div class="main">
-    <ColorPicker msg="Welcome to Your Vue.js App" canva_len="200" />
+    <ColorPicker msg="Welcome to Your Vue.js App" canva_len="300" />
   </div>
 </template>
 
