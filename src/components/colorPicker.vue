@@ -50,6 +50,10 @@ export default {
 
       corEscolhidaHSL: "",
       corEscolhidaRGB: "",
+
+      pickedColor: false,
+      pickedColorSlider: false,
+      pickedAlphaSlider: false,
     };
   },
   provide() {
@@ -123,6 +127,17 @@ export default {
       );
 
       this.reloadColorpicker();
+      const ctx2 = this.provider2.context;
+      this.drawCircle(
+        ctx2,
+
+        this.light * this.color_picker_width,
+        this.sat * this.color_picker_height,
+        this.color_picker_slider_width / 2,
+        "transparent",
+        "white",
+        2
+      );
       this.updateDisplay();
     },
     listenSlider2(event) {
@@ -151,8 +166,8 @@ export default {
     },
     listenpicker(event) {
       const rect = this.$refs["color_picker"].getBoundingClientRect();
-      const light = (event.clientX - rect.left) / this.canva_len;
-      const saturation = (event.clientY - rect.top) / this.canva_len;
+      const light = (event.clientX - rect.left) / this.color_picker_width;
+      const saturation = (event.clientY - rect.top) / this.color_picker_height;
       const ctx = this.provider2.context;
       this.reloadColorpicker();
       this.drawCircle(
@@ -264,6 +279,179 @@ export default {
         );
       }
     },
+    grabItPicker(event) {
+      const rect = this.$refs["color_picker"].getBoundingClientRect();
+
+      const light = (event.clientX - rect.left) / this.color_picker_width;
+      const saturation = (event.clientY - rect.top) / this.color_picker_height;
+      const ctx2 = this.provider2.context;
+
+      if (this.pickedColor) {
+        this.reloadColorpicker();
+        this.drawCircle(
+          ctx2,
+          this.light * this.color_picker_width,
+          this.sat * this.color_picker_height,
+          this.color_picker_slider_width / 2,
+          "transparent",
+          "white",
+          2
+        );
+
+        this.sat = saturation;
+        this.light = light;
+        this.updateDisplay();
+      }
+    },
+    clickedPicker(event) {
+      const rect = this.$refs["color_picker"].getBoundingClientRect();
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
+      const minimo = 10;
+
+      if (
+        y > this.sat * this.color_picker_width - minimo &&
+        y < this.sat * this.color_picker_width + minimo &&
+        x > this.light * this.color_picker_height - minimo &&
+        x < this.light * this.color_picker_height + minimo
+      ) {
+        this.pickedColor = true;
+      }
+    },
+    unclickedPicker(event) {
+      const rect = this.$refs["color_picker"].getBoundingClientRect();
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
+      const minimo = 10;
+
+      if (
+        y > this.sat * this.color_picker_width - minimo &&
+        y < this.sat * this.color_picker_width + minimo &&
+        x > this.light * this.color_picker_height - minimo &&
+        x < this.light * this.color_picker_height + minimo
+      ) {
+        this.pickedColor = false;
+      }
+    },
+
+    grabItColorPicker(event) {
+      const rect = this.$refs["color_picker_slider"].getBoundingClientRect();
+
+      const hue = event.clientY - rect.top;
+
+      const ctx = this.provider1.context;
+
+      if (this.pickedColorSlider) {
+        this.hue = hue / this.color_picker_slider_height;
+
+        ctx.clearRect(
+          0,
+          0,
+          this.color_picker_slider_width,
+          this.color_picker_slider_height
+        );
+        this.reloadColorpickerSlider();
+        this.drawCircle(
+          ctx,
+          this.color_picker_slider_width / 2,
+          hue,
+          this.color_picker_slider_width / 2,
+          "transparent",
+          "white",
+
+          2
+        );
+        this.reloadColorpicker();
+        const ctx2 = this.provider2.context;
+        this.drawCircle(
+          ctx2,
+
+          this.light * this.color_picker_width,
+          this.sat * this.color_picker_height,
+          this.color_picker_slider_width / 2,
+          "transparent",
+          "white",
+          2
+        );
+
+        this.updateDisplay();
+      }
+    },
+    clickedColorPicker(event) {
+      const rect = this.$refs["color_picker_slider"].getBoundingClientRect();
+      const x = event.clientY - rect.top;
+      const minimo = 10;
+
+      if (
+        x > this.hue * this.color_picker_slider_height - minimo &&
+        x < this.hue * this.color_picker_slider_height + minimo
+      ) {
+        this.pickedColorSlider = true;
+      }
+    },
+    unclickedColorPicker(event) {
+      const rect = this.$refs["color_picker_slider"].getBoundingClientRect();
+      const x = event.clientY - rect.top;
+      const minimo = 10;
+      if (
+        x > this.hue * this.color_picker_slider_height - minimo &&
+        x < this.hue * this.color_picker_slider_height + minimo
+      ) {
+        this.pickedColorSlider = false;
+      }
+    },
+
+    grabItAlphaPicker(event) {
+      const rect = this.$refs["alpha_picker_slider"].getBoundingClientRect();
+      const hue = event.clientY - rect.top;
+      const ctx = this.provider3.context;
+
+      if (this.pickedAlphaSlider) {
+        this.alpha = hue / this.color_picker_slider_height;
+
+        ctx.clearRect(
+          0,
+          0,
+          this.color_picker_slider_width,
+          this.color_picker_slider_height
+        );
+        this.reloadAlphapickerSlider();
+        this.drawCircle(
+          ctx,
+          this.color_picker_slider_width / 2,
+          hue,
+          this.color_picker_slider_width / 2,
+          "transparent",
+          "white",
+          2
+        );
+
+        this.updateDisplay();
+      }
+    },
+    clickedAlphaPicker(event) {
+      const rect = this.$refs["alpha_picker_slider"].getBoundingClientRect();
+      const x = event.clientY - rect.top;
+      const minimo = 10;
+
+      if (
+        x > this.alpha * this.color_picker_slider_height - minimo &&
+        x < this.alpha * this.color_picker_slider_height + minimo
+      ) {
+        this.pickedAlphaSlider = true;
+      }
+    },
+    unclickedAlphaPicker(event) {
+      const rect = this.$refs["alpha_picker_slider"].getBoundingClientRect();
+      const x = event.clientY - rect.top;
+      const minimo = 10;
+      if (
+        x > this.alpha * this.color_picker_slider_height - minimo &&
+        x < this.alpha * this.color_picker_slider_height + minimo
+      ) {
+        this.pickedAlphaSlider = false;
+      }
+    },
   },
 
   mounted() {
@@ -309,29 +497,63 @@ export default {
 
     this.drawCircle(
       ctx2,
-      this.sat * this.color_picker_width,
-      this.light * this.color_picker_height,
+      this.light * this.color_picker_width,
+      this.sat * this.color_picker_height,
       this.color_picker_slider_width / 2,
       "transparent",
       "white",
       2
     );
-    console.log(
-      this.sat * this.color_picker_width,
-      this.light * this.color_picker_height
-    );
 
+    ///////////////////////////////
+
+    this.$refs["color_picker"].addEventListener("click", this.listenpicker);
+    this.$refs["color_picker"].addEventListener(
+      "mousedown",
+      this.clickedPicker
+    );
+    this.$refs["color_picker"].addEventListener(
+      "mouseup",
+      this.unclickedPicker
+    );
+    this.$refs["color_picker"].addEventListener("mousemove", this.grabItPicker);
+
+    ///////////////////////////////
     this.$refs["color_picker_slider"].addEventListener(
       "click",
       this.listenSlider
     );
+    this.$refs["color_picker_slider"].addEventListener(
+      "mousedown",
+      this.clickedColorPicker
+    );
+    this.$refs["color_picker_slider"].addEventListener(
+      "mouseup",
+      this.unclickedColorPicker
+    );
+    this.$refs["color_picker_slider"].addEventListener(
+      "mousemove",
+      this.grabItColorPicker
+    );
+
+    // ////////////////////////////////
 
     this.$refs["alpha_picker_slider"].addEventListener(
       "click",
       this.listenSlider2
     );
-
-    this.$refs["color_picker"].addEventListener("click", this.listenpicker);
+    this.$refs["alpha_picker_slider"].addEventListener(
+      "mousedown",
+      this.clickedAlphaPicker
+    );
+    this.$refs["alpha_picker_slider"].addEventListener(
+      "mouseup",
+      this.unclickedAlphaPicker
+    );
+    this.$refs["alpha_picker_slider"].addEventListener(
+      "mousemove",
+      this.grabItAlphaPicker
+    );
 
     this.updateDisplay();
 
