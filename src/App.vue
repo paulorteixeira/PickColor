@@ -1,17 +1,18 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div class="main">
+    <ColorPicker msg="Welcome to Your Vue.js App" canva_len="200" />
+  </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import ColorPicker from "./components/colorPicker.vue";
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
-    HelloWorld
-  }
-}
+    ColorPicker,
+  },
+};
 </script>
 
 <style>
@@ -22,5 +23,10 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+}
+.main {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
 }
 </style>
