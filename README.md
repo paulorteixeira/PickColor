@@ -1,24 +1,48 @@
-# app
+# ColorPick Vue 3
 
-## Project setup
-```
+Este é um simples colorpicker feito usando Vue 3 no estilo da Option API. Com este colorpicker, é possível selecionar a cor desejada, incluindo o canal alfa, enquanto os parâmetros estão sendo ajustados. O valor RGBA correspondente é gerado e exibido no próprio componente para uso posterior.
+
+## Demonstração
+
+<img src="imagem.png"  />
+
+## Instalação
+
+```bash
+# Instale as dependências
 npm install
+# Ou use yarn
+yarn install
 ```
 
-### Compiles and hot-reloads for development
-```
+## Uso
+
+Após a instalação das dependências, você pode executar o servidor de desenvolvimento local com o seguinte comando:
+
+```bash
+# Com npm
 npm run serve
+
+# Ou com yarn
+yarn serve
 ```
 
-### Compiles and minifies for production
-```
-npm run build
-```
+Isso iniciará um servidor local e você poderá acessar o colorpicker em seu navegador.
 
-### Lints and fixes files
-```
-npm run lint
-```
+Certifique-se de verificar o arquivo `App.vue` para ver como o componente do colorpicker está sendo usado e ajustado.
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+## Contribuição
+
+Sinta-se à vontade para abrir um pull request se desejar contribuir para este projeto. Seja claro ao descrever as mudanças propostas e certifique-se de testar adequadamente.
+
+## Autor
+
+### Paulo Ricardo Teixeira
+
+#### Desenvolvedor
+
+Linkedin: [linkedin.com/in/paulo-ricardo-teixeira/](https://www.linkedin.com/in/paulo-ricardo-teixeira/)
+
+## Licença
+
+Este projeto é licenciado sob a Licença MIT - veja o [MIT](https://choosealicense.com/licenses/mit/) para mais detalhes.

@@ -16,7 +16,6 @@
 export default {
   name: "ColorPicker",
   props: {
-    msg: String,
     canva_len: String,
   },
   data() {
@@ -30,10 +29,12 @@ export default {
       provider3: {
         context: null,
       },
+
       color_picker_width: this.canva_len,
       color_picker_height: this.canva_len,
       color_picker_slider_width: (this.canva_len * 0.1618) / 3,
       color_picker_slider_height: this.canva_len,
+
       hue: Math.random(),
       sat: Math.random(),
       light: Math.random(),
@@ -42,6 +43,7 @@ export default {
       R: 0,
       G: 0,
       B: 0,
+
       canva_holder_style: {
         backgroundColor: "#fff",
         width: this.canva_len * 1.25 + "px",
@@ -56,13 +58,15 @@ export default {
       pickedAlphaSlider: false,
     };
   },
-  provide() {
-    return {
-      provider: this.provider,
-    };
-  },
 
   methods: {
+    /**
+     * Converte HSL para RGB,
+     * @param {number} h [0,1]
+     * @param {number} s [0,1]
+     * @param {number} l [0,1]
+     * @returns {number []}
+     */
     hslToRgb(h, s, l) {
       let r, g, b;
 
@@ -79,7 +83,13 @@ export default {
 
       return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
     },
-
+    /**
+     * Converte HUE para RGB,
+     * @param {number} p [0,1]
+     * @param {number} q [0,1]
+     * @param {number} t [0,1]
+     * @returns {number []}
+     */
     hueToRgb(p, q, t) {
       if (t < 0) t += 1;
       if (t > 1) t -= 1;
@@ -88,6 +98,17 @@ export default {
       if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
       return p;
     },
+    /**
+     * Desenha um circlulo no canvas:HTML5,
+     * @param {object} ctx context from the canvas getContext("2d")
+     * @param {number} x x position of the origin of the circle
+     * @param {number} y y position of the origin of the circle
+     * @param {number} radius radius of the circle
+     * @param {string} fill string css color
+     * @param {string} stroke string css color
+     * @param {number} strokeWidth width of the circle
+     * @returns {void}
+     */
     drawCircle(ctx, x, y, radius, fill, stroke, strokeWidth) {
       ctx.beginPath();
       ctx.arc(x, y, radius, 0, 2 * Math.PI, false);
@@ -101,6 +122,11 @@ export default {
         ctx.stroke();
       }
     },
+    /**
+     * [Callback Function] Atualiza o valor das cores ao clicar no slider de Hue
+     * @param {event} event
+     * @returns {void}
+     */
     listenSlider(event) {
       const rect = this.$refs["color_picker_slider"].getBoundingClientRect();
       const hue = event.clientY - rect.top;
@@ -140,6 +166,11 @@ export default {
       );
       this.updateDisplay();
     },
+    /**
+     * [Callback Function] Atualiza o valor das cores ao clicar no slider de Alpha
+     * @param {event} event
+     * @returns {void}
+     */
     listenSlider2(event) {
       const rect = this.$refs["alpha_picker_slider"].getBoundingClientRect();
       const hue = event.clientY - rect.top;
@@ -164,6 +195,11 @@ export default {
       );
       this.updateDisplay();
     },
+    /**
+     * [Callback Function] Atualiza o valor das cores ao clicar no canvas de cor
+     * @param {event} event
+     * @returns {void}
+     */
     listenpicker(event) {
       const rect = this.$refs["color_picker"].getBoundingClientRect();
       const light = (event.clientX - rect.left) / this.color_picker_width;
@@ -183,7 +219,10 @@ export default {
       this.light = light;
       this.updateDisplay();
     },
-
+    /**
+     * Atualiza o valor RGBA escrito na tela
+     * @returns {void}
+     */
     updateDisplay() {
       let corfinal = this.hslToRgb(this.hue, this.sat, this.light);
 
@@ -203,7 +242,10 @@ export default {
       this.canva_holder_style.backgroundColor =
         "rgba(" + this.R + "," + this.G + "," + this.B + "," + this.alpha + ")";
     },
-
+    /**
+     * Gera as cores mostradas no Canvas de Cores
+     * @returns {void}
+     */
     reloadColorpicker() {
       const ctx2 = this.provider2.context;
       let sub_divisao = 100;
@@ -237,7 +279,10 @@ export default {
         }
       }
     },
-
+    /**
+     * Gera as cores mostradas no slider de Hue
+     * @returns {void}
+     */
     reloadColorpickerSlider() {
       let sub_divisao = 100;
       let tamn_max = this.color_picker_slider_height;
@@ -260,6 +305,10 @@ export default {
         );
       }
     },
+    /**
+     * Gera as cores mostradas no slider de Alpha
+     * @returns {void}
+     */
     reloadAlphapickerSlider() {
       let sub_divisao = 100;
       let tamn_max = this.color_picker_slider_height;
@@ -279,6 +328,11 @@ export default {
         );
       }
     },
+    /**
+     * [Callback Function] Atualiza a posição do circulo indicador de cor com base no movimento
+     * @param {event} event
+     * @returns {void}
+     */
     grabItPicker(event) {
       const rect = this.$refs["color_picker"].getBoundingClientRect();
 
@@ -303,6 +357,11 @@ export default {
         this.updateDisplay();
       }
     },
+    /**
+     * [Callback Function] Permite que o circulo indicador de cor selecionada seja arrastado
+     * @param {event} event
+     * @returns {void}
+     */
     clickedPicker(event) {
       const rect = this.$refs["color_picker"].getBoundingClientRect();
       const x = event.clientX - rect.left;
@@ -318,6 +377,11 @@ export default {
         this.pickedColor = true;
       }
     },
+    /**
+     * [Callback Function] Impede que o circulo indicador de cor selecionada seja arrastado
+     * @param {event} event
+     * @returns {void}
+     */
     unclickedPicker(event) {
       const rect = this.$refs["color_picker"].getBoundingClientRect();
       const x = event.clientX - rect.left;
@@ -333,7 +397,11 @@ export default {
         this.pickedColor = false;
       }
     },
-
+    /**
+     * [Callback Function] Atualiza a posição do circulo indicador de HUE com base no movimento
+     * @param {event} event
+     * @returns {void}
+     */
     grabItColorPicker(event) {
       const rect = this.$refs["color_picker_slider"].getBoundingClientRect();
 
@@ -377,6 +445,11 @@ export default {
         this.updateDisplay();
       }
     },
+    /**
+     * [Callback Function] Permite que o circulo indicador de HUE selecionada seja arrastado
+     * @param {event} event
+     * @returns {void}
+     */
     clickedColorPicker(event) {
       const rect = this.$refs["color_picker_slider"].getBoundingClientRect();
       const x = event.clientY - rect.top;
@@ -389,6 +462,11 @@ export default {
         this.pickedColorSlider = true;
       }
     },
+    /**
+     * [Callback Function] Impede que o circulo indicador de HUE selecionada seja arrastado
+     * @param {event} event
+     * @returns {void}
+     */
     unclickedColorPicker(event) {
       const rect = this.$refs["color_picker_slider"].getBoundingClientRect();
       const x = event.clientY - rect.top;
@@ -400,7 +478,11 @@ export default {
         this.pickedColorSlider = false;
       }
     },
-
+    /**
+     * [Callback Function] Atualiza a posição do circulo indicador de ALPHA com base no movimento
+     * @param {event} event
+     * @returns {void}
+     */
     grabItAlphaPicker(event) {
       const rect = this.$refs["alpha_picker_slider"].getBoundingClientRect();
       const hue = event.clientY - rect.top;
@@ -429,6 +511,11 @@ export default {
         this.updateDisplay();
       }
     },
+    /**
+     * [Callback Function] Impede que o circulo indicador de ALPHA selecionada seja arrastado
+     * @param {event} event
+     * @returns {void}
+     */
     clickedAlphaPicker(event) {
       const rect = this.$refs["alpha_picker_slider"].getBoundingClientRect();
       const x = event.clientY - rect.top;
@@ -441,6 +528,11 @@ export default {
         this.pickedAlphaSlider = true;
       }
     },
+    /**
+     * [Callback Function] Impede que o circulo indicador de ALPHA selecionada seja arrastado
+     * @param {event} event
+     * @returns {void}
+     */
     unclickedAlphaPicker(event) {
       const rect = this.$refs["alpha_picker_slider"].getBoundingClientRect();
       const x = event.clientY - rect.top;
@@ -494,7 +586,6 @@ export default {
       "white",
       2
     );
-
     this.drawCircle(
       ctx2,
       this.light * this.color_picker_width,

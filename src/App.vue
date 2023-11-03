@@ -1,6 +1,6 @@
 <template>
   <div class="main">
-    <ColorPicker msg="Welcome to Your Vue.js App" canva_len="300" />
+    <ColorPicker canva_len="300" />
   </div>
 </template>
 
@@ -26,7 +26,8 @@ export default {
 }
 .main {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: center;
+  align-items: center;
 }
 </style>
